@@ -1,0 +1,38 @@
+version: '4.0'
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tg-bot-health-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - my-network
+    ports:
+      - 1337:1337
+    depends_on:
+      - postgresql
+
+  postgresql:
+    image: postgres:16.1
+    container_name: tg-bot-health-db
+    restart: unless-stopped
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - my-network
+    ports:
+      - 5433:5432
+
+volumes:
+  pg-data:
+  pgadmin-data:
+
+networks:
+  my-network:
+    driver: bridge
